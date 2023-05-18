@@ -70,11 +70,11 @@ Optional arguments:
 python exercise1_main.py --weights <path_to_weights> --source <path_to_input_images>
 ```
 
-path_to_weights: the trained YOLOv5 to be used is 'yolov5\runs\train\yolov5s_results8\weights\best.pt'
+- path_to_weights: the trained YOLOv5 to be used is 'yolov5\runs\train\yolov5s_results8\weights\best.pt'
 
-The script will process the input images, detect heroes, match them with reference heroes, and generate a report with the detected hero names.
+- The script will process the input images, detect heroes, match them with reference heroes, and generate a report with the detected hero names.
 
-The report and visualized images will be saved in "runs\detect_hero\result_\output.txt".
+- The report and visualized images will be saved in "runs\detect_hero\result_\output.txt".
 
 # Author
 Ho Quang Minh - Calvin
