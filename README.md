@@ -9,6 +9,7 @@ This repository contains the source code of May 16th Eklipse test
 - OpenCV
 - scikit-learn
 - tqdm
+- YOLOv5 weight
 
 ## Installation
 
@@ -19,26 +20,27 @@ git clone https://github.com/ultralytics/yolov5.git
 ```
 
 ### 2. Change to the YOLOv5 directory:
-
+```shell
 cd yolov5
-
+```
 ### 3. Install the required dependencies of YOLOv5:
-
+```shell
 pip install -r requirements.txt
-
+```
 ### 4. Change to the main directory
-
+```shell
 cd ..
-
+```
 ### 5. Install the required dependencies of exercise1_main.py:
-
+```shell
 pip install -r requirements.txt
-
+```
 ## Usage
 
-### 1. Prepare the input images and reference hero images:
+### 1. Prepare the input images, reference hero images and YOLOv5 weights:
 - Create a folder containing the input images to be processed.
 - Create a folder containing the reference hero images. These hero images can be crawled with datacrawling.py script
+- Download the YOLOv5 weights from https://drive.google.com/drive/folders/1157Un5tRwyx50aFf3bgZsdL8MG2qvm-Y?usp=share_link
 - Ensure that the input and reference image names follow the correct naming convention.
 
 ### 2. Execution
@@ -74,4 +76,6 @@ The script will process the input images, detect heroes, match them with referen
 
 The report and visualized images will be saved in "runs\detect_hero\result_\output.txt".
 
+# Author
+Ho Quang Minh - Calvin
 
