@@ -39,6 +39,7 @@ def calculate_structural_similarity(image1, image2):
     image1 = cv2.cvtColor(image1, cv2.COLOR_BGR2GRAY)
     image2 = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY)
     similarity_score = ssim(image1, image2)
+    
     return similarity_score
 
 """# Example usage
