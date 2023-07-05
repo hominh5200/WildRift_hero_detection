@@ -1,4 +1,4 @@
-# Eklipse_test
+# Hero detection
 This repository contains the source code of Hero detection project:
 - Predict the hero names on the left side of the message bar in Wild Rift
 
