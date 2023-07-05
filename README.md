@@ -1,7 +1,6 @@
 # Eklipse_test
-This repository contains the source code of May 16th Eklipse test
-## Exercise 1: Hero detection
-
+This repository contains the source code of Hero detection project:
+- Predict the hero names on the left side of the message bar in Wild Rift
 
 ## Requirements
 - Python 3.6 or above
