@@ -22,10 +22,11 @@ from yolov5.utils.plots import Annotator, colors, save_one_box
 from yolov5.utils.torch_utils import select_device, smart_inference_mode
 from sklearn.metrics import classification_report
 
-from my_utils import helper, image_processing
+from my_utils import helper, image_processing, siamese_detector
 
 def run(
-        weights=ROOT / 'yolov5/runs/train/yolov5s_results8/weights/best.pt',
+        OD_weights=ROOT / 'yolov5/runs/train/yolov5s_results8/weights/best.pt',
+        FV_weights=ROOT / 'siamese_model/siamesemodelv_test.h5',
         source=ROOT / 'yolov5/custom_test/valid/images',
         reference_heroes=ROOT / 'crawled_images',
         data=ROOT / 'yolov5/data/coco128.yaml',  # dataset.yaml path
@@ -60,12 +61,15 @@ def run(
     wild_rift_heroes = glob.glob(str(reference_heroes)+"/*.png", recursive=True) + glob.glob(str(reference_heroes)+"/*.jpg", recursive=True)
     print(image_paths_list)
 
-    # Load model
+    # Load Face Verification model
+    FV_model = siamese_detector.load_siamese_model(FV_weights)
+
+    # Load Object Detection model
     device = select_device(device)
-    model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data, fp16=half)
-    stride, names, pt = model.stride, model.names, model.pt
+    OD_model = DetectMultiBackend(OD_weights, device=device, dnn=dnn, data=data, fp16=half)
+    stride, names, pt = OD_model.stride, OD_model.names, OD_model.pt
     imgsz = check_img_size(imgsz, s=stride)  # check image size
-    model.warmup(imgsz=(1, 3, *imgsz))
+    OD_model.warmup(imgsz=(1, 3, *imgsz))
 
     output_result = []
     y_test, y_predict = [], []
@@ -77,14 +81,14 @@ def run(
             dataset = LoadImages(image_path, img_size=imgsz, stride=stride,
                                  auto=pt, vid_stride=1)
             for path, im, im0s, vid_cap, s in dataset:
-                im = torch.from_numpy(im).to(model.device)
-                im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
+                im = torch.from_numpy(im).to(OD_model.device)
+                im = im.half() if OD_model.fp16 else im.float()  # uint8 to fp16/32
                 im /= 255  # 0 - 255 to 0.0 - 1.0
                 if len(im.shape) == 3:
                     im = im[None]  # expand for batch dim
 
                 # Inference
-                pred = model(im, augment=False, visualize=False)
+                pred = OD_model(im, augment=False, visualize=False)
 
                 # NMS
                 pred = non_max_suppression(pred, conf_thres, iou_thres, 0, False, max_det=max_det)
@@ -129,12 +133,15 @@ def run(
             similarity_scores_list = []
             actual_image = read_image[int(mostleft_detected_box[1]): int(mostleft_detected_box[3]),
                                     int(mostleft_detected_box[0]):int(mostleft_detected_box[2])]
-            actual_image = cv2.resize(actual_image, (50, 50))
+            actual_image = cv2.resize(actual_image, (105, 105))
+            actual_image = siamese_detector.preprocess_for_siamese(actual_image)
 
             for ref_hero in wild_rift_heroes:
                 ref_image = cv2.imread(ref_hero)
-                ref_image = cv2.resize(ref_image, (50, 50))
-                score = image_processing.calculate_structural_similarity(actual_image, ref_image)
+                ref_image = cv2.resize(ref_image, (105, 105))
+                ref_image = siamese_detector.preprocess_for_siamese(ref_image)
+                score = siamese_detector.calculate_similarity(actual_image, ref_image, FV_model)
+                # score = image_processing.calculate_structural_similarity(actual_image, ref_image)
                 similarity_scores_list.append([ref_hero, score])
             
             # Ouput the highest score hero
@@ -175,8 +182,9 @@ def run(
 
 def parse_opt():
     parser = argparse.ArgumentParser(description='Detect name of hero version 1.0.0.0')
-    parser.add_argument('--weights', nargs='+', type=str, default=ROOT / 'yolov5/runs/train/yolov5s_results8/weights/best.pt', help='model path or triton URL')
-    parser.add_argument('--source', type=str, default=ROOT / 'custom_test/test_custom/images', help='Path to folder contains images')
+    parser.add_argument('--OD_weights', nargs='+', type=str, default=ROOT / 'yolov5/runs/train/yolov5s_results8/weights/best.pt', help='model path or triton URL of Object Detection model')
+    parser.add_argument('--FV_weights', nargs='+', type=str, default=ROOT / 'siamese_model/siamesemodelv_test.h5', help='model path or triton URL of Face Verification model')
+    parser.add_argument('--source', type=str, default=ROOT / 'custom_test/test/images', help='Path to folder contains images')
     parser.add_argument('--reference-heroes', type=str, default=ROOT / 'crawled_images', help='Path to folder contains reference heroes')
     parser.add_argument('--data', type=str, default=ROOT / 'data/coco128.yaml', help='(optional) dataset.yaml path')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=(416, 416), help='inference size h,w')
