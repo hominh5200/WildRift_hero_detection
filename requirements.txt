@@ -38,3 +38,4 @@ torchvision==0.10.1
 tqdm==4.65.0
 tritonclient==2.33.0
 x2paddle==1.4.1
+

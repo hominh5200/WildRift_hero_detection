@@ -39,7 +39,7 @@ pip install -r requirements.txt
 ### 1. Prepare the input images, reference hero images and YOLOv5 weights:
 - Create a folder containing the input images to be processed.
 - Create a folder containing the reference hero images. These hero images can be crawled with datacrawling.py script
-- Download the YOLOv5 weights from https://drive.google.com/drive/folders/1157Un5tRwyx50aFf3bgZsdL8MG2qvm-Y?usp=share_link
+- Download the YOLOv5 weights from https://drive.google.com/drive/folders/19KRkUqk-Vrj23jnD8F1IKQbEvvwA0A7_?usp=drive_link
 - Ensure that the input and reference image names follow the correct naming convention.
 
 ### 2. Execution
