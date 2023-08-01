@@ -22,10 +22,10 @@ from yolov5.utils.plots import Annotator, colors, save_one_box
 from yolov5.utils.torch_utils import select_device, smart_inference_mode
 from sklearn.metrics import classification_report
 
-from my_utils import helper, image_processing, siamese_detector
+from my_utils import helper, siamese_detector
 
 def run(
-        OD_weights=ROOT / 'yolov5/runs/train/yolov5s_results8/weights/best.pt',
+        OD_weights=ROOT / 'yolov5/runs/train/yolov5s_1k_150ep/weights/best.pt',
         FV_weights=ROOT / 'siamese_model/siamesemodelv_test.h5',
         source=ROOT / 'yolov5/custom_test/valid/images',
         reference_heroes=ROOT / 'crawled_images',
@@ -59,7 +59,6 @@ def run(
         image_paths_list = glob.glob(source+"/*.png", recursive=True) + glob.glob(source+"/*.jpg", recursive=True) 
 
     wild_rift_heroes = glob.glob(str(reference_heroes)+"/*.png", recursive=True) + glob.glob(str(reference_heroes)+"/*.jpg", recursive=True)
-    print(image_paths_list)
 
     # Load Face Verification model
     FV_model = siamese_detector.load_siamese_model(FV_weights)
@@ -182,9 +181,9 @@ def run(
 
 def parse_opt():
     parser = argparse.ArgumentParser(description='Detect name of hero version 1.0.0.0')
-    parser.add_argument('--OD_weights', nargs='+', type=str, default=ROOT / 'yolov5/runs/train/yolov5s_results8/weights/best.pt', help='model path or triton URL of Object Detection model')
-    parser.add_argument('--FV_weights', nargs='+', type=str, default=ROOT / 'siamese_model/siamesemodelv_test.h5', help='model path or triton URL of Face Verification model')
-    parser.add_argument('--source', type=str, default=ROOT / 'custom_test/test/images', help='Path to folder contains images')
+    parser.add_argument('--OD_weights', nargs='+', type=str, default=ROOT / 'yolov5/runs/train/yolov5s_1k_150ep/weights/best.pt', help='model path or triton URL of Object Detection model')
+    parser.add_argument('--FV_weights', nargs='+', type=str, default=ROOT / 'siamese_model/siamesemodel_50epochs_300images.h5', help='model path or triton URL of Face Verification model')
+    parser.add_argument('--source', type=str, default=ROOT / 'dataset/custom_test_1000/test/images', help='Path to folder contains images')
     parser.add_argument('--reference-heroes', type=str, default=ROOT / 'crawled_images', help='Path to folder contains reference heroes')
     parser.add_argument('--data', type=str, default=ROOT / 'data/coco128.yaml', help='(optional) dataset.yaml path')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=(416, 416), help='inference size h,w')
@@ -192,8 +191,8 @@ def parse_opt():
     parser.add_argument('--iou-thres', type=float, default=0.45, help='NMS IoU threshold')
     parser.add_argument('--max-det', type=int, default=1000, help='maximum detections per image')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
-    parser.add_argument('--project', default=ROOT / 'runs/detect_hero', help='save results to project/name')
-    parser.add_argument('--name', type=str, default='result_', help='Prefix of result folder')
+    parser.add_argument('--project', default=ROOT / 'runs/detect_hero_1kimg', help='save results to project/name')
+    parser.add_argument('--name', type=str, default='result_on_test', help='Prefix of result folder')
     parser.add_argument('--exist-ok', action='store_true', help='existing project/name ok, do not increment')
     parser.add_argument('--line-thickness', default=3, type=int, help='bounding box thickness (pixels)')
     parser.add_argument('--hide-labels', default=False, action='store_true', help='hide labels')
