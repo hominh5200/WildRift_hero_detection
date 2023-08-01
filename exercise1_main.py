@@ -57,7 +57,7 @@ def run(
     elif os.path.isdir(source):
         image_paths_list = glob.glob(source+"/*.png", recursive=True) + glob.glob(source+"/*.jpg", recursive=True) 
 
-    wild_rift_heroes = glob.glob(str(reference_heroes)+"/*.png", recursive=True) + glob.glob(str(reference_heroes)+"/*.png", recursive=True)
+    wild_rift_heroes = glob.glob(str(reference_heroes)+"/*.png", recursive=True) + glob.glob(str(reference_heroes)+"/*.jpg", recursive=True)
     print(image_paths_list)
 
     # Load model
