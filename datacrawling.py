@@ -10,7 +10,7 @@ for url in urls:
     filename = url.split('/')[-1]
     print(f"{url} \n")
     print(f"filename: {filename}")
-    response = request.urlretrieve(url, "D:\\IT\\AI\\Eklipse\\Eklipse_test\\crawled_images\\"+filename)
+    response = request.urlretrieve(url, "crawled_images\\"+filename)
 
 
 
